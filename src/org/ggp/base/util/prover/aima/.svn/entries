@@ -1,0 +1,80 @@
+10
+
+dir
+688
+http://ggp-base.googlecode.com/svn/trunk/ggp-base/src/org/ggp/base/util/prover/aima
+http://ggp-base.googlecode.com/svn
+
+
+
+2013-09-07T22:13:51.997231Z
+664
+oporaca@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+716a755e-b13f-cedc-210d-596dafc6fb9b
+
+knowledge
+dir
+
+unifier
+dir
+
+cache
+dir
+
+AimaProver.java
+file
+
+
+
+
+2013-10-01T13:02:34.000000Z
+178ee211267741e1630bd87bcbdc905f
+2013-09-07T22:13:51.997231Z
+664
+oporaca@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6353
+
+renamer
+dir
+
+substitution
+dir
+
+substituter
+dir
+

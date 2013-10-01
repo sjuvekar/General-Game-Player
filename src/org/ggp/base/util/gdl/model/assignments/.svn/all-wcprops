@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/682/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments
+END
+FunctionInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/FunctionInfo.java
+END
+AssignmentIterationPlan.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/AssignmentIterationPlan.java
+END
+AssignmentIterator.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/673/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/AssignmentIterator.java
+END
+AssignmentsFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/AssignmentsFactory.java
+END
+FunctionInfoImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/FunctionInfoImpl.java
+END
+AssignmentIteratorImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/AssignmentIteratorImpl.java
+END
+FunctionInfos.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/FunctionInfos.java
+END
+AddibleFunctionInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/AddibleFunctionInfo.java
+END
+IterationOrderCandidate.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/IterationOrderCandidate.java
+END
+Assignments.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/Assignments.java
+END
+MutableFunctionInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/MutableFunctionInfo.java
+END
+AssignmentsImpl.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/682/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/AssignmentsImpl.java
+END
+AssignmentFunction.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/674/trunk/ggp-base/src/org/ggp/base/util/gdl/model/assignments/AssignmentFunction.java
+END

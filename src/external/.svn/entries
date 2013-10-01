@@ -1,0 +1,55 @@
+10
+
+dir
+688
+http://ggp-base.googlecode.com/svn/trunk/ggp-base/src/external
+http://ggp-base.googlecode.com/svn
+
+
+
+2013-09-07T22:03:08.328074Z
+663
+oporaca@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+716a755e-b13f-cedc-210d-596dafc6fb9b
+
+Base64Coder
+dir
+
+Clojure
+dir
+
+JTidy
+dir
+
+Guava
+dir
+
+JSON
+dir
+
+JGoodiesForms
+dir
+
+FlyingSaucer
+dir
+
+Jython
+dir
+
+JFreeChart
+dir
+
