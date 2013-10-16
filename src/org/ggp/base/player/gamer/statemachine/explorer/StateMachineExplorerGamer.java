@@ -56,7 +56,8 @@ public class StateMachineExplorerGamer extends StateMachineGamer {
 		 * Move to play is the goal of GGP.
 		 */
 		List<Move> moves = getStateMachine().getLegalMoves(getCurrentState(), getRole());
-
+		
+		// Either make first legal or a random move
 		// Move selection = moves.get(0);
 		Move selection = (moves.get(new Random().nextInt(moves.size())));
 		
@@ -79,7 +80,7 @@ public class StateMachineExplorerGamer extends StateMachineGamer {
 	 */
 	public String getName()
 	{
-		return "RamSud v1.0";
+		return "RamSud Base";
 	}
 	
 	/**
