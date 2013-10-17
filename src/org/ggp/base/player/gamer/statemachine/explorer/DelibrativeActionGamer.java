@@ -1,6 +1,7 @@
 package org.ggp.base.player.gamer.statemachine.explorer;
 
-import org.ggp.base.player.gamer.statemachine.explorer.StateMachineExplorerGamer
+import org.ggp.base.player.gamer.event.GamerSelectedMoveEvent;
+import org.ggp.base.player.gamer.statemachine.explorer.StateMachineExplorerGamer;
 
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
@@ -8,7 +9,8 @@ import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 
 import org.ggp.base.util.statemachine.Move;
 
-import java.util.Array;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class implements compulsive delibrative action strategy: Iterate over all possible legal actions in a state 
@@ -37,10 +39,16 @@ public class DelibrativeActionGamer extends StateMachineExplorerGamer {
 		List<Move> moves = getStateMachine().getLegalMoves(getCurrentState(), getRole());
 
 		int bestScore = 0;
-		Move selection = moves[0];
+		Move selection = moves.get(0);
 		
 		for (Move m : moves) {
-			int score = getStateMachine().getNextState(getCurrentState(), Arrays.asList(m)).
+			int score = getStateMachine().getNextState(getCurrentState(), Arrays.asList(m));
+			System.out.println("\t" + score);
+			if (score > bestScore) {
+				System.out.println(score);
+				bestScore = score;
+				selection = m;
+			}
 		}
 		// We get the end time
 		// It is mandatory that stop<timeout
