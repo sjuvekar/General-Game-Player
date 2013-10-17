@@ -8,6 +8,9 @@ import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 
 import org.ggp.base.util.statemachine.Move;
+import org.ggp.base.util.statemachine.Role;
+import org.ggp.base.util.statemachine.StateMachine;
+import org.ggp.base.util.statemachine.MachineState;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,13 +39,22 @@ public class DelibrativeActionGamer extends StateMachineExplorerGamer {
 		// We get the current start time
 		long start = System.currentTimeMillis();
 
-		List<Move> moves = getStateMachine().getLegalMoves(getCurrentState(), getRole());
+		// Get the current stateMachine
+		StateMachine stateMachine = getStateMachine();
+		
+		// Get my role
+		Role role = getRole();
+		
+		// Get all legal moves
+		List<Move> moves = stateMachine.getLegalMoves(getCurrentState(), role);
 
 		int bestScore = 0;
 		Move selection = moves.get(0);
 		
+		// Iterate over the moves
 		for (Move m : moves) {
-			int score = getStateMachine().getNextState(getCurrentState(), Arrays.asList(m));
+			MachineState nextState = stateMachine.getNextState(getCurrentState(), Arrays.asList(m));
+			int score = stateMachine.getGoal(nextState, role);
 			System.out.println("\t" + score);
 			if (score > bestScore) {
 				System.out.println(score);
