@@ -80,7 +80,7 @@ public class StateMachineExplorerGamer extends StateMachineGamer {
 	 */
 	public String getName()
 	{
-		return "RamSud Base";
+		return "RamSud: Base";
 	}
 	
 	/**

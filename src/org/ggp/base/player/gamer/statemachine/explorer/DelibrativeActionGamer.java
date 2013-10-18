@@ -3,6 +3,7 @@ package org.ggp.base.player.gamer.statemachine.explorer;
 import org.ggp.base.player.gamer.event.GamerSelectedMoveEvent;
 import org.ggp.base.player.gamer.statemachine.explorer.StateMachineExplorerGamer;
 
+import org.ggp.base.util.gdl.grammar.GdlPool;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
@@ -23,7 +24,7 @@ public class DelibrativeActionGamer extends StateMachineExplorerGamer {
 	
 	public String getName()
 	{
-		return "RamSud Delibrative Action";
+		return "RamSud: Delibrative Action";
 	}
 	
 	/**
@@ -42,22 +43,23 @@ public class DelibrativeActionGamer extends StateMachineExplorerGamer {
 		// Get the current stateMachine
 		StateMachine stateMachine = getStateMachine();
 		
+		// Get current state
+		MachineState state = getCurrentState();
+		
 		// Get my role
 		Role role = getRole();
 		
 		// Get all legal moves
-		List<Move> moves = stateMachine.getLegalMoves(getCurrentState(), role);
-
+		List<Move> moves = stateMachine.getLegalMoves(state, role);
+		
 		int bestScore = 0;
 		Move selection = moves.get(0);
 		
 		// Iterate over the moves
 		for (Move m : moves) {
-			MachineState nextState = stateMachine.getNextState(getCurrentState(), Arrays.asList(m));
+			MachineState nextState = stateMachine.getNextState(state, Arrays.asList(m));
 			int score = stateMachine.getGoal(nextState, role);
-			System.out.println("\t" + score);
 			if (score > bestScore) {
-				System.out.println(score);
 				bestScore = score;
 				selection = m;
 			}
