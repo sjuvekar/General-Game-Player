@@ -7,6 +7,8 @@ import org.ggp.base.util.gdl.grammar.GdlSentence;
 public class MachineState {
     public MachineState() {
         this.contents = null;
+        this.bestMove = null;
+        this.bestScore = 0;
     }
     
     /**
@@ -18,6 +20,8 @@ public class MachineState {
     public MachineState(Set<GdlSentence> contents)
     {
         this.contents = contents;
+        this.bestMove = null;
+        this.bestScore = 0;
     }
 
     /**
@@ -58,5 +62,31 @@ public class MachineState {
         }
 
         return false;
+    }
+    
+    /**
+     * This is the best next state for a given state
+     */
+    private Move bestMove;
+    // Getter
+    public Move getBestMove() {
+    	return this.bestMove;
+    }
+    // Setter
+    public void setBestMove(Move move) {
+    	this.bestMove = move;
+    }
+ 
+    /**
+     * This is the best score one can obtain from nxt state
+     */
+    private long bestScore;
+    // Getter
+    public long getBestScore() {
+    	return this.bestScore;
+    }
+    // Setter
+    public void setBestScore(long score) {
+    	this.bestScore = score;
     }
 }

@@ -3,7 +3,6 @@ package org.ggp.base.player.gamer.statemachine.explorer;
 import org.ggp.base.player.gamer.event.GamerSelectedMoveEvent;
 import org.ggp.base.player.gamer.statemachine.explorer.StateMachineExplorerGamer;
 
-import org.ggp.base.util.gdl.grammar.GdlPool;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
