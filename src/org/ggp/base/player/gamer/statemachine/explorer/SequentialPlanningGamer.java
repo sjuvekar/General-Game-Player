@@ -3,7 +3,6 @@ package org.ggp.base.player.gamer.statemachine.explorer;
 import org.ggp.base.player.gamer.event.GamerSelectedMoveEvent;
 import org.ggp.base.player.gamer.statemachine.explorer.StateMachineExplorerGamer;
 
-import org.ggp.base.util.gdl.grammar.GdlPool;
 import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
@@ -14,12 +13,25 @@ import org.ggp.base.util.statemachine.StateMachine;
 import org.ggp.base.util.statemachine.MachineState;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * This class implements sequential planning DFS action strategy: Precompute all best next states for every state.
  */
 public class SequentialPlanningGamer extends StateMachineExplorerGamer {
+	
+	/**
+	 * This members keeps track of the sequential plan for the game.
+	 */
+	private SequentialPlan sequentialPlan;
+	
+	/**
+	 * Constructor should initialize the plan
+	 */
+	public SequentialPlanningGamer() {
+		super();
+		sequentialPlan = new SequentialPlan();
+	}
 	
 	public String getName()
 	{
@@ -27,7 +39,7 @@ public class SequentialPlanningGamer extends StateMachineExplorerGamer {
 	}
 	
 	/**
-	 * Defines the metagaming action taken by a player during the START_CLOCK
+	 * Metagaming explores the sequential plan from initial state.
 	 * @param timeout time in milliseconds since the era when this function must return
 	 * @throws TransitionDefinitionException
 	 * @throws MoveDefinitionException
@@ -35,7 +47,10 @@ public class SequentialPlanningGamer extends StateMachineExplorerGamer {
 	 */    
 	public void stateMachineMetaGame(long timeout) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException
 	{
-		setBestPlan(getStateMachine().getInitialState());
+		StateMachine stateMachine = getStateMachine();
+		Role role = getRole();
+		MachineState state = stateMachine.getInitialState();
+		sequentialPlan.explore(stateMachine, state, role);
 	}
 	
 	/**
@@ -54,11 +69,10 @@ public class SequentialPlanningGamer extends StateMachineExplorerGamer {
 		// Get current state
 		MachineState state = getCurrentState();
 		
-		if (state.getBestMove() == null) {
-			setBestPlan(state);
-		}
+		// Get the HashMap from sequential Plan.
+		HashMap<MachineState, Move> plan = sequentialPlan.getPlan();
 		
-		Move selection = state.getBestMove();
+		Move selection = plan.get(state);
 		
 		// We get the end time
 		// It is mandatory that stop<timeout
@@ -74,35 +88,4 @@ public class SequentialPlanningGamer extends StateMachineExplorerGamer {
 		return selection;
 	}
 	
-	/**
-	 * This method performs the recursive DFS on state space to find the best next move and best score for every state.
-	 * @param state
-	 * @throws TransitionDefinitionException
-	 * @throws MoveDefinitionException
-	 * @throws GoalDefinitionException
-	 */
-	private void setBestPlan(MachineState state) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException {
-		StateMachine stateMachine = getStateMachine();
-		Role myRole = getRole();
-		if (state.getBestMove() != null) {
-			return;
-		}
-		if (stateMachine.isTerminal(state)) {
-			state.setBestScore(stateMachine.getGoal(state, myRole));
-			Move noop = new Move(GdlPool.getConstant("noop"));
-			state.setBestMove(noop);
-			return;
-		}
-		List<Move> moves = stateMachine.getLegalMoves(state, myRole);
-		state.setBestMove(moves.get(0));
-		state.setBestScore(0);
-		for (Move m: moves) {
-			MachineState nextState = stateMachine.getNextState(state, Arrays.asList(m));
-			setBestPlan(nextState);
-			if (nextState.getBestScore() > state.getBestScore()) {
-				state.setBestMove(m);
-				state.setBestScore(nextState.getBestScore());
-			}
-		}
-	}
 }
