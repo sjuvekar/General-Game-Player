@@ -12,7 +12,6 @@ import org.ggp.base.util.statemachine.StateMachine;
 import org.ggp.base.util.statemachine.MachineState;
 
 import java.util.List;
-import java.util.ArrayList;
 
 public class MinMaxGamer extends StateMachineExplorerGamer {
 	
@@ -21,6 +20,11 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 	 */
 	public static int S_MAX_SCORE = 100;
 	
+	/**
+	 * This is the min possible score on any branch of minmax game
+	 */
+	public static int S_MIN_SCORE = 0;
+		
 	public String getName()
 	{
 		return "RamSud: MinMax";
@@ -51,13 +55,13 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 		Role role = getRole();
 
 		// Minimum possible score on any branch
-		int minPossibleScore = 0;
+		int minPossibleScore = S_MIN_SCORE;
 
 		// For each move by current player, find worst possible reward.
 		List<Move> moves = stateMachine.getLegalMoves(state, role);
 		Move selection = moves.get(0);
 		for (Move m: moves) {
-			int score = minScore(state, role, m);
+			int score = minScore(state, role, m, S_MIN_SCORE, S_MAX_SCORE);
 			// If worst score is max score, we have found optimal move. Do not recurse further.
 			if (score >= S_MAX_SCORE) {
 				selection = m;
@@ -84,25 +88,65 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 	 * had taken that action and we had taken move m. 
 	 * @param state
 	 * @param role
-	 * @param m
-	 * @return minimum possible score obtained for role in given state after taking move m.
+	 * @param move
+	 * @param alpha: ignored
+	 * @param beta: ignored
+	 * @return minimum possible score obtained for role in given state after taking move by role and any other move by any other role.
 	 * @throws TransitionDefinitionException
 	 * @throws MoveDefinitionException
 	 * @throws GoalDefinitionException
 	 */
-	private int minScore(MachineState state, Role role, Move m) throws MoveDefinitionException
+	protected int minScore(MachineState state, Role role, Move move, int alpha, int beta) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException
 	{
 		StateMachine stateMachine = getStateMachine();
 		
-		// Get all roles in the game
-		List<Role> allRoles = stateMachine.getRoles();
+		// Get all possible legal moves from state with move for role fixed
+		List<List<Move>> allLegalMoves = stateMachine.getLegalJointMoves(state, role, move);
 		
-		List<Move> allPlayerMoves = new ArrayList<Move>();
-		for (Role r : allRoles)
-			if (r.equals(role))
-				allPlayerMoves.add(m);
-			else 
-				allPlayerMoves.add(stateMachine.getLegalMoves(state, r).get(0));
+		// Next, for each legal move combination, find the worst possible score.
+		int bestScore = S_MAX_SCORE;
+		for (List<Move> legalMove : allLegalMoves) {
+			MachineState nextState = stateMachine.getNextState(state, legalMove);
+			int score = maxScore(nextState, role, alpha, beta);
+			if (score == S_MIN_SCORE) return score;
+			if (score < bestScore) bestScore = score;
+		}
+		return bestScore;
+	}
+	
+	
+	/**
+	 * This method iterates over all possible my actions in a given state and finds best possible score among them. 
+	 * had taken that action and we had taken move m. 
+	 * @param state
+	 * @param role
+	 * @param alpha: ignored
+	 * @param beta: ignored
+	 * @return maximum possible score obtained for role in given state after taking all possible moves.
+	 * @throws TransitionDefinitionException
+	 * @throws MoveDefinitionException
+	 * @throws GoalDefinitionException
+	 */
+
+	protected int maxScore(MachineState state, Role role, int alpha, int beta) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException
+	{
+		// Get the stateMachine
+		StateMachine stateMachine = getStateMachine();
+		// If the state is terminal, return the goal
+		if (stateMachine.isTerminal(state)) {
+			int score =  stateMachine.getGoal(state, role);
+			return score;
+		}
+		
+		// Otherwise, for every move that the player can potentially take, find the worst score. Find their best
+		List<Move> moves = stateMachine.getLegalMoves(state, role);
+		int bestScore = S_MIN_SCORE;
+		for (Move m : moves) {
+			int score = minScore(state, role, m, alpha, beta);
+			if (score == S_MAX_SCORE) return score;
+			if (score > bestScore) bestScore = score;
+		}
+		return bestScore;
 	}
 	
 }
