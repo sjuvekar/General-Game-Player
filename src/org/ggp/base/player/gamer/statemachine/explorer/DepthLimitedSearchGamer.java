@@ -11,22 +11,28 @@ import org.ggp.base.util.statemachine.MachineState;
 
 import java.util.List;
 
-public class AlphaBetaGamer extends MinMaxGamer {
+public class DepthLimitedSearchGamer extends MinMaxGamer {
+	
+	/**
+	 * This is the maximum possible tree depth to be used for bounded search
+	 */
+public static int S_MAX_TREE_DEPTH = 9;
+
 
 	public String getName()
 	{
-		return "RamSud: AlphaBeta";
+		return "RamSud: Depth Limited Search";
 	}
 
 	/**
-	 * This method iterate over all possible actions of the opposition player and finds the "best" we could do if the opposition 
-	 * had taken that action and we had taken move m. 
+	 * This method is like the basic alpha-beta gamer except that it is cut off and minimum score is returned when the level increases max depth.
+	 * And max_level is incremented before passing to the next recursion. 
 	 * @param state
 	 * @param role
 	 * @param move
 	 * @param alpha: Lower bound on the score obtained from every child state
 	 * @param beta: Upper bound on score from every child state
-	 * @param level: ignored
+	 * @param level: Current level of the tree being explored
 	 * @return minimum possible score obtained for role in given state after taking move by role and any other move by any other role.
 	 * @throws TransitionDefinitionException
 	 * @throws MoveDefinitionException
@@ -42,7 +48,7 @@ public class AlphaBetaGamer extends MinMaxGamer {
 		// Next, for each legal move combination, find the worst possible score.
 		for (List<Move> legalMove : allLegalMoves) {
 			MachineState nextState = stateMachine.getNextState(state, legalMove);
-			int score = maxScore(nextState, role, alpha, beta, level);
+			int score = maxScore(nextState, role, alpha, beta, level+1);
 			if (score < beta) beta = score;
 			if (alpha >= beta) return alpha; 
 		}
@@ -51,8 +57,7 @@ public class AlphaBetaGamer extends MinMaxGamer {
 
 
 	/**
-	 * This method iterates over all possible my actions in a given state and finds best possible score among them. 
-	 * had taken that action and we had taken move m. 
+	 * This method is like the basic alpha-beta gamer except that it is cut off and minimum score is returned when the level increases max depth.  
 	 * @param state
 	 * @param role
 	 * @param alpha: Lower bound on the score obtained from every child state
@@ -74,6 +79,10 @@ public class AlphaBetaGamer extends MinMaxGamer {
 			return score;
 		}
 
+		if (level >= S_MAX_TREE_DEPTH) {
+			return MinMaxGamer.S_MIN_SCORE;
+		}
+		
 		// Otherwise, for every move that the player can potentially take, find the worst score. Find their best
 		List<Move> moves = stateMachine.getLegalMoves(state, role);
 		for (Move m : moves) {

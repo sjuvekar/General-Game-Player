@@ -24,7 +24,8 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 	 * This is the min possible score on any branch of minmax game
 	 */
 	public static int S_MIN_SCORE = 0;
-		
+	
+	
 	public String getName()
 	{
 		return "RamSud: MinMax";
@@ -61,7 +62,7 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 		List<Move> moves = stateMachine.getLegalMoves(state, role);
 		Move selection = moves.get(0);
 		for (Move m: moves) {
-			int score = minScore(state, role, m, S_MIN_SCORE, S_MAX_SCORE);
+			int score = minScore(state, role, m, S_MIN_SCORE, S_MAX_SCORE, 0);
 			// If worst score is max score, we have found optimal move. Do not recurse further.
 			if (score >= S_MAX_SCORE) {
 				selection = m;
@@ -91,12 +92,13 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 	 * @param move
 	 * @param alpha: ignored
 	 * @param beta: ignored
+	 * @param level: ignored
 	 * @return minimum possible score obtained for role in given state after taking move by role and any other move by any other role.
 	 * @throws TransitionDefinitionException
 	 * @throws MoveDefinitionException
 	 * @throws GoalDefinitionException
 	 */
-	protected int minScore(MachineState state, Role role, Move move, int alpha, int beta) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException
+	protected int minScore(MachineState state, Role role, Move move, int alpha, int beta, int level) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException
 	{
 		StateMachine stateMachine = getStateMachine();
 		
@@ -107,7 +109,7 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 		int bestScore = S_MAX_SCORE;
 		for (List<Move> legalMove : allLegalMoves) {
 			MachineState nextState = stateMachine.getNextState(state, legalMove);
-			int score = maxScore(nextState, role, alpha, beta);
+			int score = maxScore(nextState, role, alpha, beta, level);
 			if (score == S_MIN_SCORE) return score;
 			if (score < bestScore) bestScore = score;
 		}
@@ -122,13 +124,14 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 	 * @param role
 	 * @param alpha: ignored
 	 * @param beta: ignored
+	 * @param level: ignored
 	 * @return maximum possible score obtained for role in given state after taking all possible moves.
 	 * @throws TransitionDefinitionException
 	 * @throws MoveDefinitionException
 	 * @throws GoalDefinitionException
 	 */
 
-	protected int maxScore(MachineState state, Role role, int alpha, int beta) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException
+	protected int maxScore(MachineState state, Role role, int alpha, int beta, int level) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException
 	{
 		// Get the stateMachine
 		StateMachine stateMachine = getStateMachine();
@@ -142,7 +145,7 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 		List<Move> moves = stateMachine.getLegalMoves(state, role);
 		int bestScore = S_MIN_SCORE;
 		for (Move m : moves) {
-			int score = minScore(state, role, m, alpha, beta);
+			int score = minScore(state, role, m, alpha, beta, level);
 			if (score == S_MAX_SCORE) return score;
 			if (score > bestScore) bestScore = score;
 		}
