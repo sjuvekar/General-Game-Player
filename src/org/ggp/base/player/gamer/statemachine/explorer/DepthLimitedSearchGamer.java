@@ -21,6 +21,10 @@ public class DepthLimitedSearchGamer extends MinMaxGamer {
 	 */
 	public static int S_MAX_TREE_DEPTH = 3;
 
+	/**
+	* Save progress to avoid recursion
+	**/
+	
 
 	public String getName()
 	{
