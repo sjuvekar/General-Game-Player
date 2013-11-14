@@ -1,5 +1,6 @@
 package org.ggp.base.player.gamer.statemachine.explorer.heuristic;
 
+import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 
 import org.ggp.base.util.statemachine.Move;
@@ -12,9 +13,10 @@ import java.util.List;
 public class MobilityHeuristic implements HeuristicEvalInterface {
 
 	@Override
-	public int eval(MachineState state, Role role, StateMachine stateMachine) throws MoveDefinitionException {
+	public int eval(MachineState state, Role role, StateMachine stateMachine) throws GoalDefinitionException, MoveDefinitionException {
 		List<Move> moves = stateMachine.getLegalMoves(state, role);
-		return 2;
+		int feasibleMoves = 16;
+		return (int)((double)moves.size() / (double)feasibleMoves * 100);
 	}
 
 }

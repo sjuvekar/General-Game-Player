@@ -4,6 +4,9 @@ import org.ggp.base.util.statemachine.exceptions.TransitionDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.MoveDefinitionException;
 import org.ggp.base.util.statemachine.exceptions.GoalDefinitionException;
 
+import org.ggp.base.player.gamer.statemachine.explorer.heuristic.MobilityHeuristic;
+import org.ggp.base.player.gamer.statemachine.explorer.heuristic.GoalProximityHeuristic;
+
 import org.ggp.base.util.statemachine.Move;
 import org.ggp.base.util.statemachine.Role;
 import org.ggp.base.util.statemachine.StateMachine;
@@ -16,7 +19,7 @@ public class DepthLimitedSearchGamer extends MinMaxGamer {
 	/**
 	 * This is the maximum possible tree depth to be used for bounded search
 	 */
-public static int S_MAX_TREE_DEPTH = 9;
+	public static int S_MAX_TREE_DEPTH = 3;
 
 
 	public String getName()
@@ -80,7 +83,7 @@ public static int S_MAX_TREE_DEPTH = 9;
 		}
 
 		if (level >= S_MAX_TREE_DEPTH) {
-			return MinMaxGamer.S_MIN_SCORE;
+			return evalFunction(state, role, stateMachine);
 		}
 		
 		// Otherwise, for every move that the player can potentially take, find the worst score. Find their best
@@ -91,5 +94,12 @@ public static int S_MAX_TREE_DEPTH = 9;
 			if (alpha >= beta) return beta;
 		}
 		return alpha;
+	}
+	
+	/**
+	 * Returns the eval function for limit-exceed case
+	 */
+	private int evalFunction(MachineState state, Role role, StateMachine stateMacine) throws GoalDefinitionException, MoveDefinitionException {
+		return new MobilityHeuristic().eval(state, role, stateMacine);
 	}
 }
