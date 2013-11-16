@@ -42,6 +42,8 @@ public class AlphaBetaGamer extends MinMaxGamer {
 		// Next, for each legal move combination, find the worst possible score.
 		for (List<Move> legalMove : allLegalMoves) {
 			MachineState nextState = stateMachine.getNextState(state, legalMove);
+			// Check if already visited
+			if (maxExplored.contains(nextState)) continue;
 			int score = maxScore(nextState, role, alpha, beta, level);
 			if (score < beta) beta = score;
 			if (alpha >= beta) return alpha; 
@@ -66,6 +68,13 @@ public class AlphaBetaGamer extends MinMaxGamer {
 
 	protected int maxScore(MachineState state, Role role, int alpha, int beta, int level) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException
 	{
+		// Cache check
+		if (maxScoreMap.containsKey(state)) 
+			return maxScoreMap.get(state);
+
+		// Add the state to currently explored
+		maxExplored.add(state);
+
 		// Get the stateMachine
 		StateMachine stateMachine = getStateMachine();
 		// If the state is terminal, return the goal
@@ -81,6 +90,13 @@ public class AlphaBetaGamer extends MinMaxGamer {
 			if (score > alpha) alpha = score;
 			if (alpha >= beta) return beta;
 		}
+		
+		// Remove the state from maxExplored
+		maxExplored.remove(state);
+
+		// Cache update
+		maxScoreMap.put(state, alpha);
+
 		return alpha;
 	}
 }

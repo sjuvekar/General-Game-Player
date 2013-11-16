@@ -50,7 +50,13 @@ public class MonteCarloGamer extends DepthLimitedSearchGamer {
 
 	protected int maxScore(MachineState state, Role role, int alpha, int beta, int level) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException
 	{
-		System.out.println(level);
+		// Cache check
+		if (maxScoreMap.containsKey(state)) 
+			return maxScoreMap.get(state);
+
+		// Add the state to currently explored
+		maxExplored.add(state);
+
 		// Get the stateMachine
 		StateMachine stateMachine = getStateMachine();
 		// If the state is terminal, return the goal
@@ -74,6 +80,12 @@ public class MonteCarloGamer extends DepthLimitedSearchGamer {
 			count++;
 			if (count >= S_MAX_NEIGHBORS) break;
 		}
+		
+		// Remove the state from maxExplored
+		maxExplored.remove(state);
+
+		// Cache update
+		maxScoreMap.put(state, alpha);
 		return alpha;
 	}
 	
@@ -117,7 +129,6 @@ public class MonteCarloGamer extends DepthLimitedSearchGamer {
 			Collections.shuffle(allNextStates); 
 			currState = allNextStates.get(0);
 		}
-		System.out.println(currState);
 		return stateMachine.getGoal(currState, role);
 	}
 }

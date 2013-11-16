@@ -12,6 +12,8 @@ import org.ggp.base.util.statemachine.StateMachine;
 import org.ggp.base.util.statemachine.MachineState;
 
 import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class MinMaxGamer extends StateMachineExplorerGamer {
 	
@@ -24,6 +26,24 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 	 * This is the min possible score on any branch of minmax game
 	 */
 	public static int S_MIN_SCORE = 0;
+	
+	/**
+	 * These hashtables maintain the cache for new states
+	 */
+	protected HashMap<MachineState, Integer> minScoreMap, maxScoreMap;
+	
+	/**
+	 * These sets maintain currently explored states 
+	 */
+	protected HashSet<MachineState> minExplored, maxExplored;
+	
+	
+	public MinMaxGamer() {
+		minScoreMap = new HashMap<MachineState, Integer>();
+		maxScoreMap = new HashMap<MachineState, Integer>();
+		minExplored = new HashSet<MachineState>();
+		maxExplored = new HashSet<MachineState>();
+	}
 	
 	
 	public String getName()
@@ -58,6 +78,10 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 		// Minimum possible score on any branch
 		int minPossibleScore = S_MIN_SCORE;
 
+		// Initialize the HashSets
+		minExplored = new HashSet<MachineState>();
+		maxExplored = new HashSet<MachineState>();
+		
 		// For each move by current player, find worst possible reward.
 		List<Move> moves = stateMachine.getLegalMoves(state, role);
 		Move selection = moves.get(0);
@@ -109,6 +133,8 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 		int bestScore = S_MAX_SCORE;
 		for (List<Move> legalMove : allLegalMoves) {
 			MachineState nextState = stateMachine.getNextState(state, legalMove);
+			// Check if already visited
+			if (maxExplored.contains(nextState)) continue;
 			int score = maxScore(nextState, role, alpha, beta, level);
 			if (score == S_MIN_SCORE) return score;
 			if (score < bestScore) bestScore = score;
@@ -133,6 +159,13 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 
 	protected int maxScore(MachineState state, Role role, int alpha, int beta, int level) throws TransitionDefinitionException, MoveDefinitionException, GoalDefinitionException
 	{
+		// Cache check
+		if (maxScoreMap.containsKey(state)) 
+			return maxScoreMap.get(state);
+	
+		// Add the state to currently explored
+		maxExplored.add(state);
+		
 		// Get the stateMachine
 		StateMachine stateMachine = getStateMachine();
 		// If the state is terminal, return the goal
@@ -149,6 +182,12 @@ public class MinMaxGamer extends StateMachineExplorerGamer {
 			if (score == S_MAX_SCORE) return score;
 			if (score > bestScore) bestScore = score;
 		}
+		
+		// Remove the state from maxExplored
+		maxExplored.remove(state);
+		
+		// Cache update
+		maxScoreMap.put(state, bestScore);
 		return bestScore;
 	}
 	
